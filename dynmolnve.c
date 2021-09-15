@@ -1,3 +1,5 @@
+/**AUTOR: LUCAS NICOLAO **\
+
 /* **************************************************************************************
 Algortimo básico simulação dinâmica molecular no ensemble NVE.
 Potencial de pares de Lennard-Jones em D=3, levando em conta todos pares.

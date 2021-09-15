@@ -1,3 +1,5 @@
+## AUTOR: DANIEL SOUZA LIMA de setembro de 2021 
+
 import numpy as np
 import math
 import random
