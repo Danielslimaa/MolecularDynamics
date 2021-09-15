@@ -6,16 +6,16 @@ import random
 
 global temperatura, rho, dt, N, D, L, V
 
-temperatura = np.float128(1.0)
-rho = np.float128(0.80)
+temperatura = (1.0)
+rho = (0.80)
 
-dt = np.float128(0.001)
+dt = (0.001)
 
 N = int(100)
 D = int(3)
 
-L = pow(np.float128(N)/rho, 1.0/np.float128(D))
-V = pow(L, np.float128(D))
+L = pow((N)/rho, 1.0/(D))
+V = pow(L, (D))
 
 print("Hello, world!")
 
@@ -32,7 +32,7 @@ def force(r, a):
             d2 = 0
             for n in range(0, D):
                 dr[n] = r[i, n] - r[j, n]
-                dr[n] = dr[n] - L*math.floor(dr[n]/L + 0.5)
+                dr[n] = dr[n] - L * math.floor(dr[n] / L + 0.5)
                 d2 += pow(dr[n], 2)
 
             r2 = 1.0 / d2
@@ -96,9 +96,9 @@ def measures(r, v, energia, temp, pressao):
     for n in range(0, D):
         sumv2 += v[N - 1, n] * v[N-1, n]
 
-    energia = sumv2 / (2.0 * np.float128(N)) + (en / np.float128(N))
-    temp = sumv2 / (np.float128(D) * np.float128(N))
-    pressao = temp * rho + virial / (np.float128(V) * np.float128(D))
+    energia = sumv2 / (2.0 * (N)) + (en / (N))
+    temp = sumv2 / ((D) * (N))
+    pressao = temp * rho + virial / ((V) * (D))
 
     return r, v, energia, temp, pressao
 
@@ -137,7 +137,7 @@ def initial3D(r, v, qual):
 
     if qual == 1:
         Nsites = int(round(pow(N, 1.0 / D)))
-        dx = L / np.float128(Nsites)
+        dx = L / (Nsites)
         for i in range(0, Nsites):
             for j in range(0, Nsites):
                 for k in range(0, Nsites):
