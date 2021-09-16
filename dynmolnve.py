@@ -259,26 +259,26 @@ E = 0.0
 T = 0.0
 P = 0.0
 
-#initial3D(r, v, 0)
-#K = energiacin(v)
+initial3D(r, v, 0)
+K = energiacin(v)
 
 r, v, N = ler_CondicoesIniciais("condicoes_iniciais.dat")
 
 for t in range(0, 5 * N):
- #   overrelax(r, a)
-  #  a, U = force(r, a)
+    overrelax(r, a)
+    a, U = force(r, a)
     if U <= 0:
         break
 
 for t in range(0, 1000):
-   # r, v, a = vverlet(r, v, a)
+    r, v, a = vverlet(r, v, a)
 
-    #r, v, E, T, P = measures(r, v, E, T, P)
+    r, v, E, T, P = measures(r, v, E, T, P)
 
     K = 3.0 * T / 2.0
     U = E - K
-    #print(str(t) + " " + str(round(K, 6)) + " " + str(round(U, 6)) + " " + str(round(E, 6)) + " " + str(round(T, 6)) + " " + str(round(P, 6)))
-    #impressora_video(r, N, t)
+    print(str(t) + " " + str(round(K, 6)) + " " + str(round(U, 6)) + " " + str(round(E, 6)) + " " + str(round(T, 6)) + " " + str(round(P, 6)))
+    impressora_video(r, N, t)
 
 
 
