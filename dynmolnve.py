@@ -1,4 +1,37 @@
-# AUTOR: DANIEL SOUZA LIMA de setembro de 2021
+# AUTOR: DANIEL SOUZA LIMA 15 de setembro de 2021
+#tradução do código em .c feito pelo Prof. Dr. Lucas Nicolao
+
+#/* **************************************************************************************
+#Algortimo básico simulação dinâmica molecular no ensemble NVE.
+#Potencial de pares de Lennard-Jones em D=3, levando em conta todos pares.
+
+# Parâmetros da simulação: temperatura, densidade (rho), passo de tempo
+#(dt), número de partículas (N), dimensão do sistema (D)
+
+# Descrições das funções:
+#1) force(double r[][D], double a[][D])
+#- calcula a força resultante em cada partícula/direção cartesiana, e armazena em 'a'
+#2) vverlet(double r[][D], double v[][D], double a[][D])
+#- atualização das posições 'r' e velocidades 'v' de acordo com velocity Verlet
+#- devolve o valor da energia potencial por partícula
+#3) measures(double r[][D], double v[][D], double *energia, double *temp, double *pressao)
+#- mede energia total por partícula, temperatura cinética e pressão virial
+#- lembrando que 3*temp/2 = energia cinética e energia - 3*temp/2 = energia potencial
+#4) double energiacin(double v[][D])
+#- devolve energia cinética por partícula
+#5) overrelax(double r[][D], double a[][D])
+#- suaviza forças de uma condição inicial aleatórias segundo dr/dt = -grad U
+#6) initial3D(double r[][D], double v[][D], int qual)
+#- condições iniciais aleatórias (qual=0) e cristal cúbico (qual=1) para posições
+#- velocidades aleatórias de acordo com parâmetro temperatura
+#7) reescalavT(double v[][D], double Talvo)
+#- rescala velocidades para atingir temperatura alvo Talvo
+#8) reescalarRho(double r[][D], double rho_alvo)
+#- reescala posições, tamanho da caixa e densidade para mudar densidade para rho_alvo
+#9) printXYZ(double r[][D])
+#- imprime (na tela) configurações p/ compor arquivo xyz. 1a partícula cor diferente.
+#************************************************************************************** */
+
 
 import numpy as np
 import math
@@ -223,16 +256,8 @@ def impressora_video(r, N, tempo):
             buffer2 = str(int(i)) + "\t" +  str(round(r[i,0],3)) + "\t" + str(round(r[i,1],3)) + "\t" + str(round(r[i,2],3)) + "\n"
             file_object.write(buffer2)
 
-def ler_configuracao(r):
 
-    with open("posicoes_iniciais.dat", 'r') as file_object:
-        file_object.read(buffer)
-        for i in range(N):
-            buffer2 = str(int(i)) + "\t" +  str(round(r[i,0],3)) + "\t" + str(round(r[i,1],3)) + "\t" + str(round(r[i,2],3)) + "\n"
-            file_object.write(buffer2)
- 
-
-
+#Lê as condições iniciais --------------- COMENTE A CHAMADA da FUNÇÃO "initi3D" SE FOR USÁ-lA
 def ler_CondicoesIniciais(nome_do_arquivo):
 
     with open(nome_do_arquivo, "r") as file_object:
@@ -259,10 +284,13 @@ E = 0.0
 T = 0.0
 P = 0.0
 
-initial3D(r, v, 0)
+#Condição inicial aleatória
+initial3D(r, v, 0) ### COMENTE ISSO SE FOR USAR "ler_CondicoesIniciais("condicoes_iniciais.dat")"
 K = energiacin(v)
 
-r, v, N = ler_CondicoesIniciais("condicoes_iniciais.dat")
+#Condição inicial espicificada a partir do arquivo "condicoes_iniciais.dat"
+#no formato x y z vx vy vz em que cada linha coresponde a uma partícula
+#r, v, N = ler_CondicoesIniciais("condicoes_iniciais.dat")
 
 for t in range(0, 5 * N):
     overrelax(r, a)
