@@ -1,4 +1,4 @@
-## AUTOR: DANIEL SOUZA LIMA de setembro de 2021 
+# AUTOR: DANIEL SOUZA LIMA de setembro de 2021
 
 import numpy as np
 import math
@@ -210,31 +210,75 @@ def printXYZ(r):
             print(str(r[i][n] - L * math.floor(r[i][n]/L + 0.5) + L/2.) + "\n")
 
 
+#Impressora para o OVITO
+def impressora_video(r, N, tempo):
+    
+    buffer = "ITEM: TIMESTEP\n" + str(tempo) + "\n" + "ITEM: NUMBER OF ATOMS\n" + str(N) + "\n" + "ITEM: BOX BOUNDS ss ss pp\n" 
+    buffer += "-1" + " " + "1\n" + "-1" + " " +  "1\n"
+    buffer += "-1" + " " + "1\n" + "ITEM: ATOMS id x y z" + "\n"
 
-#### Começo do programa
+    with open("particles.dump", 'a') as file_object:
+        file_object.write(buffer)
+        for i in range(N):
+            buffer2 = str(int(i)) + "\t" +  str(round(r[i,0],3)) + "\t" + str(round(r[i,1],3)) + "\t" + str(round(r[i,2],3)) + "\n"
+            file_object.write(buffer2)
 
-r = np.zeros((N,D))
-v = np.zeros((N,D))
-a = np.zeros((N,D))
+def ler_configuracao(r):
 
-K = 0.0; U = 0.0; E = 0.0; T = 0.0; P = 0.0
+    with open("posicoes_iniciais.dat", 'r') as file_object:
+        file_object.read(buffer)
+        for i in range(N):
+            buffer2 = str(int(i)) + "\t" +  str(round(r[i,0],3)) + "\t" + str(round(r[i,1],3)) + "\t" + str(round(r[i,2],3)) + "\n"
+            file_object.write(buffer2)
+ 
 
-initial3D(r, v, 0)
-K = energiacin(v)
+
+def ler_CondicoesIniciais(nome_do_arquivo):
+
+    with open(nome_do_arquivo, "r") as file_object:
+        dados = np.loadtxt(file_object)
+
+    N = dados.shape[0]
+    r = np.zeros((dados.shape[0],int(dados.shape[1]/2)))
+    v = np.zeros((dados.shape[0],int(dados.shape[1]/2)))
+
+    r = dados[:,0:3]
+    v = dados[:,3:6]
+    
+    return r, v, N
+
+# Começo do programa
+
+r = np.zeros((N, D))
+v = np.zeros((N, D))
+a = np.zeros((N, D))
+
+K = 0.0
+U = 0.0
+E = 0.0
+T = 0.0
+P = 0.0
+
+#initial3D(r, v, 0)
+#K = energiacin(v)
+
+r, v, N = ler_CondicoesIniciais("condicoes_iniciais.dat")
 
 for t in range(0, 5 * N):
-    overrelax(r, a)
-    a, U = force(r, a)
+ #   overrelax(r, a)
+  #  a, U = force(r, a)
     if U <= 0:
         break
 
 for t in range(0, 1000):
-    r, v, a = vverlet(r, v, a)
+   # r, v, a = vverlet(r, v, a)
 
-    r, v, E, T, P = measures(r, v, E, T, P)
+    #r, v, E, T, P = measures(r, v, E, T, P)
 
     K = 3.0 * T / 2.0
     U = E - K
-    print(str(t) + " " + str(round(K,6)) + " " + str(round(U,6)) + " " +
-     str(round(E,6)) +  " " + str(round(T,6)) +  " " + str(round(P,6)))
+    #print(str(t) + " " + str(round(K, 6)) + " " + str(round(U, 6)) + " " + str(round(E, 6)) + " " + str(round(T, 6)) + " " + str(round(P, 6)))
+    #impressora_video(r, N, t)
+
+
 
